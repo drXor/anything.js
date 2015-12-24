@@ -109,7 +109,7 @@ var lispy = (function(){
         this.macro = (function(defArgs, expr){
             var thiz = this;
             var f = this.lambda.call(this, defArgs, expr);
-            return (function()
+            return (function(){ 
                 return lispy(f(util.toArray(arguments)),this);
             }).lazy();
         }).lazy();
@@ -365,7 +365,7 @@ var lispy = (function(){
         var expr = this.map(function(symbol){
             if (typeof symbol === 'string' && symbol.indexOf('`', 0) === 0){
                 return symbol.substring(1);
-            } else if (typeof symbol === 'string' && symbol in scope)
+            } else if (typeof symbol === 'string' && symbol in scope){
                 return scope[symbol];
             } else{
                 return symbol;
@@ -375,7 +375,7 @@ var lispy = (function(){
         var f = this.length === 0 ? function(){return [];} : expr[0];
 
         if(f instanceof Function){
-            var args = f.isLazy() ? this.slice(1) : expr.slice(1).map(function(arg)
+            var args = f.isLazy() ? this.slice(1) : expr.slice(1).map(function(arg){
                 if(arg instanceof Array && !arg.isLiteral()){
                     return arg.lispy(scope);
                 } else{
